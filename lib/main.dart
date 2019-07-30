@@ -31,6 +31,14 @@ class HomePageState extends State<HomePage> {
     return 'Success!';
   }
 
+  String checkImage(String apiImage) {
+  if (apiImage == null) {
+    return 'https://c8.alamy.com/comp/EPF1YW/nun-with-handgun-isolated-on-white-EPF1YW.jpg';
+  } else {
+    return apiImage;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +58,7 @@ class HomePageState extends State<HomePage> {
                             child: Container(
                               padding: EdgeInsets.all(15.0),
                               child: Image.network(
-                                data[index]['images'][0]
+                                checkImage(data[index]['images'][0])
                                 ),
                               ),
                           ),

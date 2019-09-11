@@ -14,20 +14,16 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   final String url = 'http://127.0.0.1:4000/houses';
-
   // List for all the data
   List data;
   
   // We are defining return type here
   Future<String> getData() async {
     var res = await http.get(Uri.encodeFull(url), headers: { 'Accept': 'application/json'});
-    print(res.body);
     setState(() {
       var resBody = json.decode(res.body);
       data = resBody['results'];
-      print(resBody['results'].length);
     });
-
     return 'Success!';
   }
 
@@ -46,8 +42,32 @@ class HomePageState extends State<HomePage> {
           title: Text('RentAPlace'),
           backgroundColor: Colors.deepPurpleAccent,
         ),
-        body: ListView.builder(
-                itemCount: data == null ? 0 : data.length,
+        body: MyScaffold(data: data)
+      );
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    this.getData();
+
+  }
+}
+
+
+class MyScaffold extends StatelessWidget {
+    MyScaffold({this.data});
+    
+    final List data;
+    Widget build(BuildContext context) {
+
+      // filter empty images to make sure we dont get any errors building the ListView
+      var rawImages = data.map((house) => house['images']);
+      final List images = rawImages.where((image)=> !image.isEmpty ).toList();
+
+      return ListView.builder(
+                itemCount: images.length,
                 itemBuilder: (BuildContext context, int index) {
                 return Container(
                   child: Center(
@@ -58,7 +78,7 @@ class HomePageState extends State<HomePage> {
                             child: Container(
                               padding: EdgeInsets.all(15.0),
                               child: Image.network(
-                                checkImage(data[index]['images'][0])
+                                images[index][0]
                                 ),
                               ),
                           ),
@@ -75,14 +95,8 @@ class HomePageState extends State<HomePage> {
                   )
                 );
               }
-            )
-          );
-  }
-  @override
-  void initState() {
-    super.initState();
-    this.getData();
-  }
+            );
+    }
 }
 
 class SecondPage extends StatelessWidget {

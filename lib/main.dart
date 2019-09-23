@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import './src/components/ComponentFactory.dart';
+import './src/util/util.dart';
 
 void main() => runApp(MaterialApp(
   home: HomePage(), 
@@ -57,61 +59,40 @@ class HomePageState extends State<HomePage> {
 
 
 class MyScaffold extends StatelessWidget {
-    MyScaffold({this.data});
+    MyScaffold({ this.data });
     
     final List data;
     Widget build(BuildContext context) {
-
       // filter empty images to make sure we dont get any errors building the ListView
-      var rawImages = data.map((house) => house['images']);
-      final List images = rawImages.where((image)=> !image.isEmpty ).toList();
+      // Util.cleanData returns an array with the new data images,descriptions, features
+      final cleanedData = Util.cleanData(data);
+      final images = cleanedData[0];
+      final descriptions = cleanedData[1];
+      final features = cleanedData[2];
 
-      return ListView.builder(
-                itemCount: images.length,
-                itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  child: Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                          Card(
-                            child: Container(
-                              padding: EdgeInsets.all(15.0),
-                              child: Image.network(
-                                images[index][0]
-                                ),
-                              ),
-                          ),
-                          RaisedButton(
-                          onPressed: () {
-                            Navigator.push(
-                            context, new MaterialPageRoute(
-                            builder: (context) => new SecondPage()));
-                          },
-                          child: Text('Interested?'),
-                        ),
-                      ],
-                    ),
-                  )
-                );
-              }
-            );
+      return ComponentFactory.houseViewer(context, images, descriptions, features);
     }
 }
 
-class SecondPage extends StatelessWidget {
+class ViewHouseWidget extends StatelessWidget {
+  ViewHouseWidget({
+    this.houseInfo,
+    this.images,
+    this.features,
+  });
+  final List houseInfo;
+  final List images;
+  final List features;
+
   @override
   Widget build(BuildContext context) {
+    final description = Util.filterDescription(houseInfo);
     return Scaffold(
         appBar: AppBar(
-          title: Text('Second Page'),
+          title: Text('House Info'),
+          backgroundColor: Colors.deepPurpleAccent,
         ),
-        body: new Center(
-            child: RaisedButton(
-          onPressed: () {
-
-          },
-          child: Text('Press here'),
-        )));
+        body:  ComponentFactory.buildDescription(context, description, images, features)
+    );
   }
 }

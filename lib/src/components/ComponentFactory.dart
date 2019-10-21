@@ -20,7 +20,7 @@ class ComponentFactory {
         ]
       );
     }
-    else if(description.length > 1 && images != null) {
+    else if(description.length > 1 && images.length > 1) {
       final Iterable<Widget> textWidgets = description.map((desc) => new Text(desc));
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,6 +45,7 @@ class ComponentFactory {
       );
     }
     else if(description.length > 1 && images.length == 1) {
+      print(description);
       final Iterable<Widget> textWidgets = description.map((desc) => new Text(desc));
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,

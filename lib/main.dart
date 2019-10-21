@@ -1,3 +1,5 @@
+import 'package:first_flutter_app/src/components/HouseScrollView.dart';
+import 'package:first_flutter_app/src/models/house_model.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -17,7 +19,7 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   final String url = 'http://127.0.0.1:4000/houses';
   // List for all the data
-  List data;
+  Map data;
   
   // We are defining return type here
   Future<String> getData() async {
@@ -27,14 +29,6 @@ class HomePageState extends State<HomePage> {
       data = resBody['results'];
     });
     return 'Success!';
-  }
-
-  String checkImage(String apiImage) {
-  if (apiImage == null) {
-    return 'https://c8.alamy.com/comp/EPF1YW/nun-with-handgun-isolated-on-white-EPF1YW.jpg';
-  } else {
-    return apiImage;
-    }
   }
 
   @override
@@ -61,16 +55,21 @@ class HomePageState extends State<HomePage> {
 class MyScaffold extends StatelessWidget {
     MyScaffold({ this.data });
     
-    final List data;
+    final Map data;
+    @override
     Widget build(BuildContext context) {
       // filter empty images to make sure we dont get any errors building the ListView
       // Util.cleanData returns an array with the new data images,descriptions, features
-      final cleanedData = Util.cleanData(data);
-      final images = cleanedData[0];
-      final descriptions = cleanedData[1];
-      final features = cleanedData[2];
 
-      return ComponentFactory.houseViewer(context, images, descriptions, features);
+      // final House house = Util.cleanData(data);
+      // can above be replaced with under code
+      final House house = House.fromJson(data);
+      print(house.descriptions);
+      return HouseScrollView(
+        images: house.images, 
+        descriptions: house.descriptions,
+        features: house.features,
+      );
     }
 }
 

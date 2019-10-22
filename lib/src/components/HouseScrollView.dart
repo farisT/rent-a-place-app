@@ -33,7 +33,7 @@ class HouseScrollView extends StatelessWidget {
                           LinkViewButton(
                             houseViewPage: 
                             ViewHouseScreen(
-                                  houseInfo: descriptions[index],
+                                  description: descriptions[index],
                                   images: images[index], 
                                   features: features[index]
                             )

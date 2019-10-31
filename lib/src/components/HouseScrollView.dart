@@ -8,9 +8,9 @@ class HouseScrollView extends StatelessWidget {
     this.descriptions,
     this.features
   });
-  final List images;
-  final List descriptions;
-  final List features;
+  final List<dynamic> images;
+  final List<dynamic> descriptions;
+  final List<dynamic> features;
 
   @override
   Widget build(BuildContext context) {

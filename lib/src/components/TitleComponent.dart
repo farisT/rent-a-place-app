@@ -7,15 +7,16 @@ class TitleComponent extends StatelessWidget {
   });
 
   final String title;
-  final List text;
+  final List<dynamic> text;
 
   @override
   Widget build(BuildContext context) {
-      return text.isEmpty ? Text(title, 
-            style: DefaultTextStyle.of(context).style.apply(
-                color: Colors.deepPurpleAccent, 
-                fontSizeFactor: 1.0,
-            )
-      ): SizedBox();
+      return text.length > 1 ? Text(title, 
+              style: TextStyle(
+              fontSize: 35.0,
+              height: 2,
+              fontWeight: FontWeight.bold,
+              color: Colors.deepPurpleAccent
+      )): SizedBox();
     }
 }

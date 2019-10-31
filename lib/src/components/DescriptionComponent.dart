@@ -22,7 +22,7 @@ class DescriptionComponent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          TitleComponent(title: 'Images', text: images),
+          Center(child:TitleComponent(title: 'Images', text: images)),
           SliderComponent(images: images),
           TitleComponent(title: 'Description',text: description),
           ...textDescriptionWidgets,

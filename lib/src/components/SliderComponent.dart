@@ -11,7 +11,7 @@ class SliderComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
       return images.length == 1 ? SizedBox() : CarouselSlider(
-        height: 400.0,
+        height: 300.0,
         items: images.map((image) {
           return Builder(
             builder: (BuildContext context) {

@@ -1,11 +1,10 @@
-import 'package:first_flutter_app/src/components/HouseScrollView.dart';
 import 'package:first_flutter_app/src/models/house_model.dart';
+import 'package:first_flutter_app/src/screens/home_screen.dart';
+import 'package:first_flutter_app/src/screens/house_gallery_screen.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-// import './src/components/ComponentFactory.dart';
-// import './src/util/util.dart';
 
 void main() => runApp(
   MaterialApp(home: HomePage(), 
@@ -21,6 +20,11 @@ class HomePageState extends State<HomePage> {
   // List for all the data
   List data;
   House houseData;
+   int _currentIndex = 0;
+  // final List<Widget> _children = [
+  //   HomeScreen(),
+    // HouseGalleryScreen(house),
+  // ];
   // We are defining return type here
   Future<String> getData() async {
     var res = await http.get(Uri.encodeFull(url), headers: { 'Accept': 'application/json'});
@@ -36,59 +40,42 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('RentAPlace'),
+          title: Text('RentAHome'),
           backgroundColor: Colors.deepPurpleAccent,
         ),
-        body: MyScaffold(house: houseData)
-      );
+        body: [HomeScreen(), HouseGalleryScreen(house: houseData)][_currentIndex], // new
+        bottomNavigationBar: BottomNavigationBar(
+        onTap: onTabTapped, // new
+        currentIndex: _currentIndex, // new
+        items: [
+         new BottomNavigationBarItem(
+           icon: Icon(Icons.dashboard),
+           title: Text('Dashboard'),
+         ),
+         new BottomNavigationBarItem(
+           icon: Icon(Icons.home),
+           title: Text('House gallery'),
+         ),
+        //  new BottomNavigationBarItem(
+        //    icon: Icon(Icons.person),
+        //    title: Text('Profile')
+        //  )
+       ],
+     ),
+    );
   }
 
+  // HouseGalleryScreen(house: houseData)
 
+void onTabTapped(int index) {
+   setState(() {
+     _currentIndex = index;
+   });
+ }
   @override
   void initState() {
     super.initState();
     this.getData();
-
   }
 }
 
-
-class MyScaffold extends StatelessWidget {
-    MyScaffold({ this.house });
-    
-    final House house;
-
-    @override
-    Widget build(BuildContext context) {
-      // filter empty images to make sure we dont get any errors building the ListView
-      // Util.cleanData returns an array with the new data images,descriptions, features
-      return HouseScrollView(
-        images: house.images, 
-        descriptions: house.descriptions,
-        features: house.features,
-      );
-    }
-}
-
-// class ViewHouseWidget extends StatelessWidget {
-//   ViewHouseWidget({
-//     this.houseInfo,
-//     this.images,
-//     this.features,
-//   });
-//   final List houseInfo;
-//   final List images;
-//   final List features;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final description = Util.filterDescription(houseInfo);
-//     return Scaffold(
-//         appBar: AppBar(
-//           title: Text('House Info'),
-//           backgroundColor: Colors.deepPurpleAccent,
-//         ),
-//         body:  ComponentFactory.buildDescription(context, description, images, features)
-//     );
-//   }
-// }
